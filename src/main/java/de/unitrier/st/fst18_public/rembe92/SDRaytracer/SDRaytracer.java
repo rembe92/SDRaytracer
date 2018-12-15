@@ -71,7 +71,8 @@ public class SDRaytracer extends JFrame {
 	float fovx = (float) 0.628;
 	float fovy = (float) 0.628;
 	RGB background_color = new RGB(0.05f, 0.05f, 0.05f);
-	int y_angle_factor = 4, x_angle_factor = -4;
+	int y_angle_factor = 4;
+	int x_angle_factor = -4;
 
 	void profileRenderImage() {
 		long end, start, time;
