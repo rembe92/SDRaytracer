@@ -42,10 +42,12 @@ public class SDRaytracer extends JFrame {
 	}
 	
 	int rayPerPixel = 1;
-	int startX, startY, startZ;
+	int startX;
+	int startY; 
+	int startZ;
 	
-	double tan_fovx;
-	double tan_fovy;
+	double tanFovx;
+	double tanFovy;
 
 	List<Triangle> triangles;
 	
@@ -169,8 +171,8 @@ public class SDRaytracer extends JFrame {
 	}
 
 	void renderImage() {
-		tan_fovx = Math.tan(fovx);
-		tan_fovy = Math.tan(fovy);
+		tanFovx = Math.tan(fovx);
+		tanFovy = Math.tan(fovy);
 		for (int i = 0; i < width; i++) {
 			futureList[i] = (Future) eservice.submit(new RaytraceTask(this, i));
 		}
