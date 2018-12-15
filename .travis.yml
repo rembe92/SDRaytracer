@@ -3,7 +3,7 @@ language: java
 addons:
   sonarcloud:
     organization: "rembe92-github"
-    token: $SONAR_TOKEN
+    token: $SONAR_TOKEN_2
 
 script:
   # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
