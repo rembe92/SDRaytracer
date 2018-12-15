@@ -1,5 +1,5 @@
 package de.unitrier.st.fst18_public.rembe92.SDRaytracer;
-
+/*test*/
 import java.util.List;
 //Ein Würfel, bestehend aus Dreiecken
 class Cube
