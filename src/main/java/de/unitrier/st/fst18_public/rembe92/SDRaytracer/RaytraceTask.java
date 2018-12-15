@@ -3,12 +3,14 @@ package de.unitrier.st.fst18_public.rembe92.SDRaytracer;
 import java.util.concurrent.Callable;
 
 class RaytraceTask implements Callable {
-	SDRaytracer tracer;
-	int i;
+	private SDRaytracer tracer;
+	private int i;
+	private RGB black = new RGB(0.0f, 0.0f, 0.0f);
+	private RGB ambientColor = new RGB(0.01f, 0.01f, 0.01f);
 
-	RaytraceTask(SDRaytracer t, int ii) {
-		tracer = t;
-		i = ii;
+	RaytraceTask(SDRaytracer tracer, int i) {
+		this.tracer = tracer;
+		this.i = i;
 	}
 
 	public RGB[] call() {
@@ -22,24 +24,21 @@ class RaytraceTask implements Callable {
 					di = i;
 					dj = j;
 				}
-				Ray eye_ray = new Ray();
-				eye_ray.setStart(tracer.startX, tracer.startY, tracer.startZ); // ro
-				eye_ray.setDir((float) (((0.5 + di) * tracer.tan_fovx * 2.0) / tracer.width - tracer.tan_fovx),
+				Ray eyeRay = new Ray();
+				eyeRay.setStart(tracer.startX, tracer.startY, tracer.startZ); // ro
+				eyeRay.setDir((float) (((0.5 + di) * tracer.tan_fovx * 2.0) / tracer.width - tracer.tan_fovx),
 						(float) (((0.5 + dj) * tracer.tan_fovy * 2.0) / tracer.height - tracer.tan_fovy), (float) 1f); // rd
-				eye_ray.normalize();
-				col[j] = addColors(tracer.image[i][j], rayTrace(eye_ray, 0), 1.0f / tracer.rayPerPixel);
+				eyeRay.normalize();
+				col[j] = addColors(tracer.image[i][j], rayTrace(eyeRay, 0), 1.0f / tracer.rayPerPixel);
 			}
 		}
 		return col;
 	}
 
-	int maxRec = 3;
-	RGB black = new RGB(0.0f, 0.0f, 0.0f);
-	RGB ambient_color = new RGB(0.01f, 0.01f, 0.01f);
+
 	
-	
-	RGB rayTrace(Ray ray, int rec) {
-		if (rec > maxRec)
+	private RGB rayTrace(Ray ray, int rec) {
+		if (rec > tracer.getMaxRec())
 			return black;
 		IPoint ip = ray.hitObject(tracer.getTriangles()); // (ray, p, n, triangle);
 		if (ip.dist > IPoint.epsilon)
@@ -48,34 +47,34 @@ class RaytraceTask implements Callable {
 			return black;
 	}
 
-	RGB lighting(Ray ray, IPoint ip, int rec) {
+	private RGB lighting(Ray ray, IPoint ip, int rec) {
 		Vec3D point = ip.ipoint;
 		Triangle triangle = ip.triangle;
-		RGB color = addColors(triangle.color, ambient_color, 1);
-		Ray shadow_ray = new Ray();
+		RGB color = addColors(triangle.color, ambientColor, 1);
+		Ray shadowRay = new Ray();
 		for (Light light : tracer.getLights()) {
-			shadow_ray.start = point;
-			shadow_ray.dir = light.position.minus(point).mult(-1);
-			shadow_ray.dir.normalize();
-			IPoint ip2 = shadow_ray.hitObject(tracer.getTriangles());
+			shadowRay.start = point;
+			shadowRay.dir = light.position.minus(point).mult(-1);
+			shadowRay.dir.normalize();
+			IPoint ip2 = shadowRay.hitObject(tracer.getTriangles());
 			if (ip2.dist < IPoint.epsilon) {
-				float ratio = Math.max(0, shadow_ray.dir.dot(triangle.normal));
+				float ratio = Math.max(0, shadowRay.dir.dot(triangle.normal));
 				color = addColors(color, light.color, ratio);
 			}
 		}
 		Ray reflection = new Ray();
 		// R = 2N(N*L)-L) L ausgehender Vektor
-		Vec3D L = ray.dir.mult(-1);
+		Vec3D lVector = ray.dir.mult(-1);
 		reflection.start = point;
-		reflection.dir = triangle.normal.mult(2 * triangle.normal.dot(L)).minus(L);
+		reflection.dir = triangle.normal.mult(2 * triangle.normal.dot(lVector)).minus(lVector);
 		reflection.dir.normalize();
 		RGB rcolor = rayTrace(reflection, rec + 1);
-		float ratio = (float) Math.pow(Math.max(0, reflection.dir.dot(L)), triangle.shininess);
+		float ratio = (float) Math.pow(Math.max(0, reflection.dir.dot(lVector)), triangle.shininess);
 		color = addColors(color, rcolor, ratio);
 		return (color);
 	}
 	
-	RGB addColors(RGB c1, RGB c2, float ratio) {
+	private RGB addColors(RGB c1, RGB c2, float ratio) {
 		return c1.addColor(c2, ratio);
 	}
 

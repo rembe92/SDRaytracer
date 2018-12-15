@@ -35,9 +35,17 @@ public class SDRaytracer extends JFrame {
 	int nrOfProcessors = Runtime.getRuntime().availableProcessors();
 	ExecutorService eservice = Executors.newFixedThreadPool(nrOfProcessors);
 
-	int maxRec = 3;
+	private int maxRec = 3;
+	
+	public int getMaxRec() {
+		return maxRec; 
+	}
+	
 	int rayPerPixel = 1;
 	int startX, startY, startZ;
+	
+	double tan_fovx;
+	double tan_fovy;
 
 	List<Triangle> triangles;
 	
@@ -60,9 +68,7 @@ public class SDRaytracer extends JFrame {
 
 	float fovx = (float) 0.628;
 	float fovy = (float) 0.628;
-	RGB ambient_color = new RGB(0.01f, 0.01f, 0.01f);
 	RGB background_color = new RGB(0.05f, 0.05f, 0.05f);
-	RGB black = new RGB(0.0f, 0.0f, 0.0f);
 	int y_angle_factor = 4, x_angle_factor = -4;
 
 	void profileRenderImage() {
@@ -161,10 +167,6 @@ public class SDRaytracer extends JFrame {
 		this.pack();
 		this.setVisible(true);
 	}
-
-	Ray eye_ray = new Ray();
-	double tan_fovx;
-	double tan_fovy;
 
 	void renderImage() {
 		tan_fovx = Math.tan(fovx);
