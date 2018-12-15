@@ -57,7 +57,7 @@ public class SDRaytracer extends JFrame {
 
 	Light mainLight = new Light(new Vec3D(0, 100, 0), new RGB(0.1f, 0.1f, 0.1f));
 
-	Light lights[] = new Light[] { mainLight, new Light(new Vec3D(100, 200, 300), new RGB(0.5f, 0, 0.0f)),
+	Light[] lights = new Light[] { mainLight, new Light(new Vec3D(100, 200, 300), new RGB(0.5f, 0, 0.0f)),
 			new Light(new Vec3D(-100, 200, 300), new RGB(0.0f, 0, 0.5f))
 			// ,new Light(new Vec3D(-100,0,0), new RGB(0.0f,0.8f,0.0f))
 	};
@@ -71,11 +71,13 @@ public class SDRaytracer extends JFrame {
 	float fovx = (float) 0.628;
 	float fovy = (float) 0.628;
 	RGB background_color = new RGB(0.05f, 0.05f, 0.05f);
-	int y_angle_factor = 4;
-	int x_angle_factor = -4;
+	int yAngleFactor = 4;
+	int xAngleFactor = -4;
 
 	void profileRenderImage() {
-		long end, start, time;
+		long end;
+		long start;
+		long time;
 
 		renderImage(); // initialisiere Datenstrukturen, erster Lauf verf�lscht sonst Messungen
 
@@ -109,8 +111,8 @@ public class SDRaytracer extends JFrame {
 		contentPane.setLayout(new BorderLayout());
 		JPanel area = new JPanel() {
 			public void paint(Graphics g) {
-				System.out.println("fovx=" + fovx + ", fovy=" + fovy + ", xangle=" + x_angle_factor + ", yangle="
-						+ y_angle_factor);
+				System.out.println("fovx=" + fovx + ", fovy=" + fovy + ", xangle=" + xAngleFactor + ", yangle="
+						+ yAngleFactor);
 				if (image == null)
 					return;
 				for (int i = 0; i < width; i++)
@@ -126,7 +128,7 @@ public class SDRaytracer extends JFrame {
 			public void keyPressed(KeyEvent e) {
 				boolean redraw = false;
 				if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-					x_angle_factor--;
+					xAngleFactor--;
 					// mainLight.position.y-=10;
 					// fovx=fovx+0.1f;
 					// fovy=fovx;
@@ -134,7 +136,7 @@ public class SDRaytracer extends JFrame {
 					redraw = true;
 				}
 				if (e.getKeyCode() == KeyEvent.VK_UP) {
-					x_angle_factor++;
+					xAngleFactor++;
 					// mainLight.position.y+=10;
 					// fovx=fovx-0.1f;
 					// fovy=fovx;
@@ -142,7 +144,7 @@ public class SDRaytracer extends JFrame {
 					redraw = true;
 				}
 				if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-					y_angle_factor--;
+					yAngleFactor--;
 					// mainLight.position.x-=10;
 					// startX-=10;
 					// fovx=fovx+0.1f;
@@ -150,7 +152,7 @@ public class SDRaytracer extends JFrame {
 					redraw = true;
 				}
 				if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-					y_angle_factor++;
+					yAngleFactor++;
 					// mainLight.position.x+=10;
 					// startX+=10;
 					// fovx=fovx-0.1f;
@@ -198,8 +200,8 @@ public class SDRaytracer extends JFrame {
 		Cube.addCube(triangles, 50, -20, -40, 10, 80, 100, new RGB(.5f, .5f, .5f), 0.2f);
 		Cube.addCube(triangles, -70, -26, -40, 130, 3, 40, new RGB(.5f, .5f, .5f), 0.2f);
 
-		Matrix mRx = Matrix.createXRotation((float) (x_angle_factor * Math.PI / 16));
-		Matrix mRy = Matrix.createYRotation((float) (y_angle_factor * Math.PI / 16));
+		Matrix mRx = Matrix.createXRotation((float) (xAngleFactor * Math.PI / 16));
+		Matrix mRy = Matrix.createYRotation((float) (yAngleFactor * Math.PI / 16));
 		Matrix mT = Matrix.createTranslation(0, 0, 200);
 		Matrix m = mT.mult(mRx).mult(mRy);
 		m.print();
