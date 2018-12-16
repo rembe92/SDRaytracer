@@ -1,7 +1,9 @@
 package de.unitrier.st.fst18_public.rembe92.SDRaytracer;
 
 class Triangle {
-	Vec3D p1, p2, p3;
+	Vec3D p1;
+	Vec3D p2;
+	Vec3D p3;
 	RGB color;
 	Vec3D normal;
 	float shininess;
@@ -12,7 +14,8 @@ class Triangle {
 		p3 = pp3;
 		color = col;
 		shininess = sh;
-		Vec3D e1 = p2.minus(p1), e2 = p3.minus(p1);
+		Vec3D e1 = p2.minus(p1);
+		Vec3D e2 = p3.minus(p1);
 		normal = e1.cross(e2);
 		normal.normalize();
 	}

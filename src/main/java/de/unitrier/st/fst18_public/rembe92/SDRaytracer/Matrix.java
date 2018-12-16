@@ -3,7 +3,7 @@ package de.unitrier.st.fst18_public.rembe92.SDRaytracer;
 import java.util.List;
 
 class Matrix {
-	float val[][] = new float[4][4];
+	float[][] val = new float[4][4];
 
 	Matrix() {
 	}

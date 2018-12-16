@@ -1,7 +1,10 @@
 package de.unitrier.st.fst18_public.rembe92.SDRaytracer;
 //Vektor in der 3 Dimension
 class Vec3D {
-	  float x, y, z, w=1;
+	  float x;
+	  float y;
+	  float z;
+	  float w=1;
 	  Vec3D(float xx, float yy, float zz) { x=xx; y=yy; z=zz; }
 	  Vec3D(float xx, float yy, float zz, float ww) { x=xx; y=yy; z=zz; w=ww; }
 	  Vec3D add(Vec3D v)

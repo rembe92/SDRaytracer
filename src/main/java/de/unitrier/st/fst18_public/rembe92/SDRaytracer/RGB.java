@@ -3,7 +3,9 @@ package de.unitrier.st.fst18_public.rembe92.SDRaytracer;
 import java.awt.Color;
 
 class RGB {
-	float red, green, blue;
+	float red;
+	float green;
+	float blue;
 	Color color;
 
 	RGB(float r, float g, float b) {
@@ -24,7 +26,7 @@ class RGB {
 		blue = b;
 	}
 
-	Color color() {
+	Color getColor() {
 		if (color != null)
 			return color;
 		color = new Color((int) (red * 255), (int) (green * 255), (int) (blue * 255));

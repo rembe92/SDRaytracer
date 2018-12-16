@@ -41,14 +41,14 @@ class RaytraceTask implements Callable {
 		if (rec > tracer.getMaxRec())
 			return black;
 		IPoint ip = ray.hitObject(tracer.getTriangles()); // (ray, p, n, triangle);
-		if (ip.dist > IPoint.epsilon)
+		if (ip.dist > IPoint.EPSILON)
 			return lighting(ray, ip, rec);
 		else
 			return black;
 	}
 
 	private RGB lighting(Ray ray, IPoint ip, int rec) {
-		Vec3D point = ip.ipoint;
+		Vec3D point = ip.ipointVector;
 		Triangle triangle = ip.triangle;
 		RGB color = addColors(triangle.color, ambientColor, 1);
 		Ray shadowRay = new Ray();
@@ -57,7 +57,7 @@ class RaytraceTask implements Callable {
 			shadowRay.dir = light.position.minus(point).mult(-1);
 			shadowRay.dir.normalize();
 			IPoint ip2 = shadowRay.hitObject(tracer.getTriangles());
-			if (ip2.dist < IPoint.epsilon) {
+			if (ip2.dist < IPoint.EPSILON) {
 				float ratio = Math.max(0, shadowRay.dir.dot(triangle.normal));
 				color = addColors(color, light.color, ratio);
 			}
