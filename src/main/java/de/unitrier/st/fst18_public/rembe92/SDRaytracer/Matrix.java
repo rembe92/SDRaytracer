@@ -2,9 +2,11 @@ package de.unitrier.st.fst18_public.rembe92.SDRaytracer;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 class Matrix {
 	float[][] val = new float[4][4];
-
+	static Logger log = Logger.getLogger(Matrix.class);
 	Matrix() {
 	}
 
@@ -13,11 +15,13 @@ class Matrix {
 	}
 
 	void print() {
+		String out ="";
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
-				System.out.print(" " + (val[i][j] + "       ").substring(0, 8));
+				out += (" " + (val[i][j] + "       ").substring(0, 8));
 			}
-			System.out.println();
+			log.debug(out);
+			out = "";
 		}
 	}
 

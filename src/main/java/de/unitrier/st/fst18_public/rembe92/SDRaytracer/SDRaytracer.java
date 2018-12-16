@@ -1,31 +1,34 @@
 package de.unitrier.st.fst18_public.rembe92.SDRaytracer;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import java.awt.Color;
-import java.awt.Container;
 import java.awt.BorderLayout;
-import java.awt.Graphics;
+import java.awt.Container;
 import java.awt.Dimension;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ArrayList;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.concurrent.Callable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import org.apache.log4j.Logger;
+
+
+
 
 /* Implementation of a very simple Raytracer
    Stephan Diehl, Universitaet Trier, 2010-2016
 */
 
 public class SDRaytracer extends JFrame {
+	
+	private static Logger log = Logger.getLogger(SDRaytracer.class);
+	
 	private static final long serialVersionUID = 1L;
 	boolean profiling = false;
 	int width = 1000;
@@ -82,9 +85,9 @@ public class SDRaytracer extends JFrame {
 		renderImage(); // initialisiere Datenstrukturen, erster Lauf verf�lscht sonst Messungen
 
 		for (int procs = 1; procs < 6; procs++) {
-
+			String out = "";
 			maxRec = procs - 1;
-			System.out.print(procs);
+			out += procs;
 			for (int i = 0; i < 10; i++) {
 				start = System.currentTimeMillis();
 
@@ -92,9 +95,9 @@ public class SDRaytracer extends JFrame {
 
 				end = System.currentTimeMillis();
 				time = end - start;
-				System.out.print(";" + time);
+				out += ";" + time;
 			}
-			System.out.println("");
+			log.debug(out);
 		}
 	}
 
@@ -111,7 +114,7 @@ public class SDRaytracer extends JFrame {
 		contentPane.setLayout(new BorderLayout());
 		JPanel area = new JPanel() {
 			public void paint(Graphics g) {
-				System.out.println("fovx=" + fovx + ", fovy=" + fovy + ", xangle=" + xAngleFactor + ", yangle="
+				log.debug("fovx=" + fovx + ", fovy=" + fovy + ", xangle=" + xAngleFactor + ", yangle="
 						+ yAngleFactor);
 				if (image == null)
 					return;
@@ -186,7 +189,11 @@ public class SDRaytracer extends JFrame {
 				for (int j = 0; j < height; j++)
 					image[i][j] = col[j];
 			} catch (InterruptedException e) {
+				log.warn("Interrupted! ", e);
+				Thread.currentThread().interrupt();
 			} catch (ExecutionException e) {
+				log.warn("Interrupted! ", e);
+				Thread.currentThread().interrupt();
 			}
 		}
 	}

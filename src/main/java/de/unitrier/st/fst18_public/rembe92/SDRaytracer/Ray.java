@@ -2,7 +2,11 @@ package de.unitrier.st.fst18_public.rembe92.SDRaytracer;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 class Ray {
+	private static Logger log = Logger.getLogger(Ray.class);
+	
 	Vec3D start = new Vec3D(0, 0, 0);
 	Vec3D dir = new Vec3D(0, 0, 0);
 
@@ -18,7 +22,7 @@ class Ray {
 		dir.normalize();
 	}
 
-	// see M�ller&Haines, page 305
+	// see Mueller&Haines, page 305
 	IPoint intersect(Triangle t) {
 		float epsilon = IPoint.EPSILON;
 		Vec3D e1 = t.p2.minus(t.p1);
@@ -41,7 +45,7 @@ class Ray {
 		if (dist < epsilon)
 			return new IPoint(null, null, -1);
 		Vec3D ip = t.p1.mult(1 - u - v).add(t.p2.mult(u)).add(t.p3.mult(v));
-		// DEBUG.debug("Intersection point: "+ip.x+","+ip.y+","+ip.z);
+		// log.debug("Intersection point: "+ip.x+","+ip.y+","+ip.z);
 		return new IPoint(t, ip, dist);
 	}
 
