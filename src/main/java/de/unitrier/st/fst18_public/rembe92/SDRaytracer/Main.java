@@ -6,7 +6,7 @@ public class Main {
 
 	private static Logger log = Logger.getLogger(Main.class);
 	
-	public static void main(String argv[]) {
+	public static void main(String[] argv) {
 		long start = System.currentTimeMillis();
 		SDRaytracer sdr = new SDRaytracer();
 		long end = System.currentTimeMillis();

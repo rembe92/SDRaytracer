@@ -38,12 +38,7 @@ public class SDRaytracer extends JFrame {
 	int nrOfProcessors = Runtime.getRuntime().availableProcessors();
 	ExecutorService eservice = Executors.newFixedThreadPool(nrOfProcessors);
 
-	private int maxRec = 3;
-	
-	public int getMaxRec() {
-		return maxRec; 
-	}
-	
+	int maxRec = 3;
 	int rayPerPixel = 1;
 	int startX;
 	int startY; 
@@ -54,10 +49,6 @@ public class SDRaytracer extends JFrame {
 
 	List<Triangle> triangles;
 	
-	public List<Triangle> getTriangles (){
-		return triangles;
-	}
-
 	Light mainLight = new Light(new Vec3D(0, 100, 0), new RGB(0.1f, 0.1f, 0.1f));
 
 	Light[] lights = new Light[] { mainLight, new Light(new Vec3D(100, 200, 300), new RGB(0.5f, 0, 0.0f)),
@@ -85,9 +76,9 @@ public class SDRaytracer extends JFrame {
 		renderImage(); // initialisiere Datenstrukturen, erster Lauf verf�lscht sonst Messungen
 
 		for (int procs = 1; procs < 6; procs++) {
-			String out = "";
+			StringBuilder out = new StringBuilder();
 			maxRec = procs - 1;
-			out += procs;
+			out.append(procs);
 			for (int i = 0; i < 10; i++) {
 				start = System.currentTimeMillis();
 
@@ -95,9 +86,9 @@ public class SDRaytracer extends JFrame {
 
 				end = System.currentTimeMillis();
 				time = end - start;
-				out += ";" + time;
+				out.append(";" + time);
 			}
-			log.debug(out);
+			log.debug(out.toString());
 		}
 	}
 
@@ -113,6 +104,7 @@ public class SDRaytracer extends JFrame {
 		Container contentPane = this.getContentPane();
 		contentPane.setLayout(new BorderLayout());
 		JPanel area = new JPanel() {
+			@Override
 			public void paint(Graphics g) {
 				log.debug("fovx=" + fovx + ", fovy=" + fovy + ", xangle=" + xAngleFactor + ", yangle="
 						+ yAngleFactor);
@@ -126,8 +118,9 @@ public class SDRaytracer extends JFrame {
 					}
 			}
 		};
-
+		
 		addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				boolean redraw = false;
 				if (e.getKeyCode() == KeyEvent.VK_DOWN) {
@@ -180,7 +173,7 @@ public class SDRaytracer extends JFrame {
 		tanFovx = Math.tan(fovx);
 		tanFovy = Math.tan(fovy);
 		for (int i = 0; i < width; i++) {
-			futureList[i] = (Future) eservice.submit(new RaytraceTask(this, i));
+			futureList[i] = eservice.submit(new RaytraceTask(this, i));
 		}
 
 		for (int i = 0; i < width; i++) {

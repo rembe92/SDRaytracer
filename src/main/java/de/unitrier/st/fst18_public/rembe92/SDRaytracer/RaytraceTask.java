@@ -3,10 +3,10 @@ package de.unitrier.st.fst18_public.rembe92.SDRaytracer;
 import java.util.concurrent.Callable;
 
 class RaytraceTask implements Callable {
-	private SDRaytracer tracer;
-	private int i;
-	private RGB black = new RGB(0.0f, 0.0f, 0.0f);
-	private RGB ambientColor = new RGB(0.01f, 0.01f, 0.01f);
+	SDRaytracer tracer;
+	int i;
+	RGB black = new RGB(0.0f, 0.0f, 0.0f);
+	RGB ambientColor = new RGB(0.01f, 0.01f, 0.01f);
 
 	RaytraceTask(SDRaytracer tracer, int i) {
 		this.tracer = tracer;
@@ -37,17 +37,17 @@ class RaytraceTask implements Callable {
 
 
 	
-	private RGB rayTrace(Ray ray, int rec) {
-		if (rec > tracer.getMaxRec())
+	RGB rayTrace(Ray ray, int rec) {
+		if (rec > tracer.maxRec)
 			return black;
-		IPoint ip = ray.hitObject(tracer.getTriangles()); // (ray, p, n, triangle);
+		IPoint ip = ray.hitObject(tracer.triangles); // (ray, p, n, triangle);
 		if (ip.dist > IPoint.EPSILON)
 			return lighting(ray, ip, rec);
 		else
 			return black;
 	}
 
-	private RGB lighting(Ray ray, IPoint ip, int rec) {
+	RGB lighting(Ray ray, IPoint ip, int rec) {
 		Vec3D point = ip.ipointVector;
 		Triangle triangle = ip.triangle;
 		RGB color = addColors(triangle.color, ambientColor, 1);
@@ -56,7 +56,7 @@ class RaytraceTask implements Callable {
 			shadowRay.start = point;
 			shadowRay.dir = light.position.minus(point).mult(-1);
 			shadowRay.dir.normalize();
-			IPoint ip2 = shadowRay.hitObject(tracer.getTriangles());
+			IPoint ip2 = shadowRay.hitObject(tracer.triangles);
 			if (ip2.dist < IPoint.EPSILON) {
 				float ratio = Math.max(0, shadowRay.dir.dot(triangle.normal));
 				color = addColors(color, light.color, ratio);
@@ -74,7 +74,7 @@ class RaytraceTask implements Callable {
 		return (color);
 	}
 	
-	private RGB addColors(RGB c1, RGB c2, float ratio) {
+	RGB addColors(RGB c1, RGB c2, float ratio) {
 		return c1.addColor(c2, ratio);
 	}
 

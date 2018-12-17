@@ -15,13 +15,13 @@ class Matrix {
 	}
 
 	void print() {
-		String out ="";
+		StringBuilder out = new StringBuilder();
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
-				out += (" " + (val[i][j] + "       ").substring(0, 8));
+				out.append((" " + (val[i][j] + "       ").substring(0, 8)));
 			}
-			log.debug(out);
-			out = "";
+			log.debug(out.toString());
+			out.setLength(0);
 		}
 	}
 
@@ -112,7 +112,8 @@ class Matrix {
 			t.p1 = this.mult(t.p1);
 			t.p2 = this.mult(t.p2);
 			t.p3 = this.mult(t.p3);
-			Vec3D e1 = t.p2.minus(t.p1), e2 = t.p3.minus(t.p1);
+			Vec3D e1 = t.p2.minus(t.p1);
+			Vec3D e2 = t.p3.minus(t.p1);
 			t.normal = e1.cross(e2);
 			t.normal.normalize();
 		}

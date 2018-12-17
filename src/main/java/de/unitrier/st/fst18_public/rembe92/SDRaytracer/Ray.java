@@ -5,8 +5,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 class Ray {
-	private static Logger log = Logger.getLogger(Ray.class);
-	
 	Vec3D start = new Vec3D(0, 0, 0);
 	Vec3D dir = new Vec3D(0, 0, 0);
 
@@ -54,13 +52,11 @@ class Ray {
 		float idist = -1;
 		for (Triangle t : triangles) {
 			IPoint ip = intersect(t);
-			if (ip.dist != -1) {
-				if ((idist == -1) || (ip.dist < idist)) { // save that intersection
-					idist = ip.dist;
-					isect.ipointVector = ip.ipointVector;
-					isect.dist = ip.dist;
-					isect.triangle = t;
-				}
+			if ((ip.dist != -1) && ((idist == -1) || (ip.dist < idist))) { // save that intersection
+				idist = ip.dist;
+				isect.ipointVector = ip.ipointVector;
+				isect.dist = ip.dist;
+				isect.triangle = t;
 			}
 		}
 		return isect; // return intersection point and normal
