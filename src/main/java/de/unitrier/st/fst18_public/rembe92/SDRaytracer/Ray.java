@@ -2,8 +2,6 @@ package de.unitrier.st.fst18_public.rembe92.SDRaytracer;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 class Ray {
 	Vec3D start = new Vec3D(0, 0, 0);
 	Vec3D dir = new Vec3D(0, 0, 0);
