@@ -25,7 +25,9 @@ import org.apache.log4j.Logger;
    Stephan Diehl, Universitaet Trier, 2010-2016
 */
 
-public class SDRaytracer extends JFrame {
+public class SDRaytracer {
+	
+	private JFrame jFrame;
 	
 	private static Logger log = Logger.getLogger(SDRaytracer.class);
 	
@@ -93,6 +95,7 @@ public class SDRaytracer extends JFrame {
 	}
 
 	SDRaytracer() {
+		jFrame = new JFrame("SDRaytracer");
 		createScene();
 
 		if (!profiling)
@@ -100,8 +103,8 @@ public class SDRaytracer extends JFrame {
 		else
 			profileRenderImage();
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Container contentPane = this.getContentPane();
+		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Container contentPane = jFrame.getContentPane();
 		contentPane.setLayout(new BorderLayout());
 		JPanel area = new JPanel() {
 			@Override
@@ -119,7 +122,7 @@ public class SDRaytracer extends JFrame {
 			}
 		};
 		
-		addKeyListener(new KeyAdapter() {
+		jFrame.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				boolean redraw = false;
@@ -158,15 +161,15 @@ public class SDRaytracer extends JFrame {
 				if (redraw) {
 					createScene();
 					renderImage();
-					repaint();
+					jFrame.repaint();
 				}
 			}
 		});
 
 		area.setPreferredSize(new Dimension(width, height));
 		contentPane.add(area);
-		this.pack();
-		this.setVisible(true);
+		jFrame.pack();
+		jFrame.setVisible(true);
 	}
 
 	void renderImage() {
